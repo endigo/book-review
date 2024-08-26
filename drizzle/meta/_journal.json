@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1724678573537,
+      "tag": "0000_curly_ultragirl",
+      "breakpoints": true
+    }
+  ]
+}
