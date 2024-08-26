@@ -11,6 +11,8 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm/sql";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 const metadataField: Record<string, PgColumnBuilderBase> = {
   metadata: jsonb("metadata").default(sql`'{}'::jsonb`),
@@ -63,3 +65,20 @@ export const reviewsRelation = relations(reviews, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const insertUserSchema = createInsertSchema(users);
+export const selectUserSchema = createSelectSchema(users);
+
+export const insertBookSchema = createInsertSchema(books, {
+  name: z.string(),
+  description: z.string(),
+  isbn: (schema) => schema.isbn.length(13),
+});
+export const selectBookSchema = createSelectSchema(books);
+
+export const insertReviewSchema = createInsertSchema(reviews, {
+  reviewText: z.string(),
+  rating: z.number().min(1).max(5).default(5),
+});
+
+export const selectReviewSchema = createSelectSchema(reviews);
