@@ -2,7 +2,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, create `.env.local` file with the following
+
+```
+AUTH_SECRET=secretauthkey
+DATABASE_URL=postgresql://postgres:postgres@localhost/postgres
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
