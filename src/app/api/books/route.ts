@@ -1,4 +1,5 @@
 import { db, books as Books, insertBookSchema } from "~/lib/db";
+import { insertBook, getList } from "./service";
 
 const requestSchema = insertBookSchema.pick({
   name: true,
@@ -6,13 +7,9 @@ const requestSchema = insertBookSchema.pick({
   isbn: true,
 });
 
-const createBook = async (book: ReturnType<requestSchema.parse>) => {
-  const books = await db.insert(Books).values(book).returning();
-};
-
 // http://localhost:3000/api/books
 export async function GET(request: Request) {
-  const books = await db.select().from(Books);
+  const books = await getList();
 
   return Response.json({ data: books });
 }
@@ -22,7 +19,7 @@ export async function POST(request: Request) {
 
   const book = requestSchema.parse(body);
 
-  const books = await createBook(book);
+  const books = await insertBook(book);
 
   return Response.json({ data: books });
 }
