@@ -77,6 +77,8 @@ export const insertBookSchema = createInsertSchema(books, {
 export const selectBookSchema = createSelectSchema(books);
 
 export const insertReviewSchema = createInsertSchema(reviews, {
+  bookId: z.string().uuid(),
+  userId: z.string().uuid(),
   reviewText: z.string(),
   rating: z.number().min(1).max(5).default(5),
 });

@@ -1,5 +1,5 @@
-import { db, books as Books, insertBookSchema } from "~/lib/db";
-import { insertBook, getList } from "./service";
+import { insertBookSchema } from "~/lib/db";
+import { insertBook, getList } from "~/services/book-service";
 
 const requestSchema = insertBookSchema.pick({
   name: true,
