@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { registerUser } from "~/services/user-service";
+import { signIn } from "~/lib/auth";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -13,23 +12,20 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-export const SignUp = () => {
-  const handleSubmit = async (formData: FormData) => {
-    "use server";
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    await registerUser({ email, password });
-
-    // TOOD: show success message
-    redirect("/");
-  };
+export const LogIn = () => {
   return (
     <Card className="w-full max-w-sm">
-      <form action={handleSubmit}>
+      <form
+        action={async (formData) => {
+          "use server";
+          await signIn("credentials", formData);
+        }}
+      >
         <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Enter your email below to sign up.</CardDescription>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account.
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
@@ -48,13 +44,13 @@ export const SignUp = () => {
           </div>
           <div className="grid gap-2">
             <Button type="submit" className="w-full">
-              Sign up
+              Sign in
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            az
-            <Link href="/" className="underline">
-              Sign in
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="underline">
+              Sign up
             </Link>
           </div>
         </CardContent>

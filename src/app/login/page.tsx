@@ -1,9 +1,9 @@
-import { SignUp } from "~/components/auth/signup";
+import { LogIn } from "~/components/auth/login";
 
-export default function PageSignUp() {
+export default function PageLogIn() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <SignUp />
+      <LogIn />
     </main>
   );
 }

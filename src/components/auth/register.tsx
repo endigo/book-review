@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { signIn } from "~/lib/auth";
+import { registerUser } from "~/services/user-service";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -12,20 +13,22 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-export const SignIn = () => {
+export const Register = () => {
+  const handleSubmit = async (formData: FormData) => {
+    "use server";
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    await registerUser({ email, password });
+
+    redirect("/?message=Registration successful!");
+  };
   return (
     <Card className="w-full max-w-sm">
-      <form
-        action={async (formData) => {
-          "use server";
-          await signIn("credentials", formData);
-        }}
-      >
+      <form action={handleSubmit}>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account.
-          </CardDescription>
+          <CardTitle className="text-2xl">Sign up</CardTitle>
+          <CardDescription>Enter your email below to sign up.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
@@ -44,13 +47,13 @@ export const SignIn = () => {
           </div>
           <div className="grid gap-2">
             <Button type="submit" className="w-full">
-              Sign in
+              Register
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline">
-              Sign up
+            Already have an account?{" "}
+            <Link href="/" className="underline">
+              Login
             </Link>
           </div>
         </CardContent>
