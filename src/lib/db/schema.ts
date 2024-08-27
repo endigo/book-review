@@ -9,6 +9,7 @@ import {
   varchar,
   date,
   integer,
+  unique,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm/sql";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -41,15 +42,21 @@ export const books = pgTable("books", {
   authors: text("authors"),
 });
 
-export const reviews = pgTable("reviews", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  ...timestampFields,
-  ...metadataField,
-  bookId: uuid("book_id"),
-  userId: uuid("user_id"),
-  reviewText: text("review_text"),
-  rating: integer("rating"), // Check CONSTRAINT is not implemented yet
-});
+export const reviews = pgTable(
+  "reviews",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ...timestampFields,
+    ...metadataField,
+    bookId: uuid("book_id"),
+    userId: uuid("user_id"),
+    reviewText: text("review_text"),
+    rating: integer("rating"), // Check CONSTRAINT is not implemented yet
+  },
+  (t) => ({
+    peruser: unique("peruesr").on(t.bookId, t.userId),
+  })
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   reviews: many(reviews),

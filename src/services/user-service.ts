@@ -32,5 +32,7 @@ export const getUser = async (email: string, plainPassword: string) => {
     return null;
   }
 
-  return user;
+  const { passwordHash, ...rest } = user;
+
+  return rest;
 };

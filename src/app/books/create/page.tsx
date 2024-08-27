@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -10,15 +12,28 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 
+import { insertBook } from "~/services/book-service";
+
 export default function BooksCreate() {
+  const handleSubmit = async (formData: FormData) => {
+    "use server";
+    const name = formData.get("name") as string;
+    const isbn = formData.get("isbn") as string;
+    const description = formData.get("description") as string;
+
+    await insertBook({ name, isbn, description });
+
+    redirect("/?message=Book added!");
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Create book</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form>
+        <form action={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Add a book</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name</Label>
@@ -41,12 +56,14 @@ export default function BooksCreate() {
                 />
               </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Deploy</Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button asChild variant="outline">
+              <Link href="/">Cancel</Link>
+            </Button>
+            <Button type="submit">Create</Button>
+          </CardFooter>
+        </form>
       </Card>
     </main>
   );

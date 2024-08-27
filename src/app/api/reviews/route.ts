@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { auth } from "~/lib/auth";
 import { insertReviewSchema } from "~/lib/db";
 import { insertReview } from "~/services/review-service";
 
@@ -9,17 +9,20 @@ const requestSchema = insertReviewSchema.pick({
 });
 
 export async function GET(request: Request) {
-  return Response.json({ data: "Hello, World!" });
+  const session = await auth();
+
+  return Response.json({ data: session?.user?.id });
 }
 
 // POST http://localhost:3000/api/reviews
 export async function POST(request: Request) {
   const body = await request.json();
+  const session = await auth();
 
   const data = requestSchema.parse(body);
 
   // TODO: get userId from request
-  // data.bookId = request.user.id
+  data.bookId = session?.user?.id;
 
   const review = await insertReview(data);
 
