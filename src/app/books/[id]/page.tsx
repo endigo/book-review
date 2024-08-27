@@ -29,6 +29,11 @@ export default async function BookReview({
   params: { id: string };
 }) {
   const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const book = await getBook(params.id);
   const handleSubmit = async (formData: FormData) => {
     "use server";
@@ -56,7 +61,7 @@ export default async function BookReview({
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="rating">Rating</Label>
-                <Select name="rating">
+                <Select name="rating" defaultValue="5">
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder={<Ratings rating={5} />} />
                   </SelectTrigger>

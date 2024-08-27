@@ -1,7 +1,7 @@
 import { signOut } from "~/lib/auth";
 import { Button } from "~/components/ui/button";
 
-export function SignOut() {
+export function LogOut() {
   return (
     <form
       action={async () => {
@@ -9,7 +9,7 @@ export function SignOut() {
         await signOut();
       }}
     >
-      <Button type="submit">Sign Out</Button>
+      <Button type="submit">Log Out</Button>
     </form>
   );
 }

@@ -13,8 +13,15 @@ import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 
 import { insertBook } from "~/services/book-service";
+import { auth } from "~/lib/auth";
 
-export default function BooksCreate() {
+export default async function BooksCreate() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const handleSubmit = async (formData: FormData) => {
     "use server";
     const name = formData.get("name") as string;
