@@ -9,6 +9,11 @@ AUTH_SECRET=secretauthkey
 DATABASE_URL=postgresql://postgres:postgres@localhost/postgres
 ```
 
+Run migrations
+```bash
+npx drizzle-kit migrate
+```
+
 Then run the development server:
 
 ```bash
