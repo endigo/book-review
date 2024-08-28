@@ -1,4 +1,7 @@
 "use client";
+
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -20,10 +23,17 @@ import { Ratings } from "~/components/ui/rating";
 import { useToast } from "~/components/ui/use-toast";
 
 export const ReviewForm = ({ bookId }: { bookId: string }) => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isFetching, setIsFetching] = useState(false);
   const { toast } = useToast();
+
+  const isMutating = isFetching || isPending;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const target = e.target as HTMLFormElement;
     const rating = (e.target as any).elements["rating"].value;
     const review = (e.target as any).elements["review"].value;
 
@@ -35,7 +45,7 @@ export const ReviewForm = ({ bookId }: { bookId: string }) => {
       });
       return;
     }
-
+    setIsFetching(true);
     await fetch("/api/reviews", {
       method: "POST",
       body: JSON.stringify({
@@ -46,8 +56,7 @@ export const ReviewForm = ({ bookId }: { bookId: string }) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-
+        setIsFetching(false);
         if (res.message) {
           let message = res.message;
 
@@ -67,6 +76,14 @@ export const ReviewForm = ({ bookId }: { bookId: string }) => {
         toast({
           title: "Success",
           description: "Review added successfully",
+        });
+
+        target.reset();
+
+        startTransition(() => {
+          // Refresh the current route and fetch new data from the server without
+          // losing client-side browser or React state.
+          router.refresh();
         });
       });
   };
