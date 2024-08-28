@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db, reviews as Reviews } from "~/lib/db";
 
 export const insertReview = async (

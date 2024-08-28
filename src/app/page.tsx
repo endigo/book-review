@@ -6,17 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "~/components/ui/card";
 import { Ratings } from "~/components/ui/rating";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
 import { getList } from "~/services/book-service";
 
 export default async function Home() {
@@ -35,10 +26,10 @@ export default async function Home() {
             <CardDescription>{book.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="my-2 flex">
+            <div className="my-2 flex items-center">
               <Ratings rating={book.rating ?? 0} />
               <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-              <div className="ml-2">{book.reviewCount} reviews</div>
+              <div>{book.reviewCount} reviews</div>
             </div>
             <div className="my-4">
               <Button asChild>

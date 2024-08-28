@@ -32,8 +32,6 @@ export default async function BookReview({
 
   const reviews = await getListByBookId(book.id);
 
-  console.log(JSON.stringify(reviews));
-
   return (
     <main className="flex min-h-screen flex-col p-24">
       <Card className="mb-4">

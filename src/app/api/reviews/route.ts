@@ -8,12 +8,6 @@ const requestSchema = insertReviewSchema.pick({
   rating: true,
 });
 
-export async function GET(request: Request) {
-  const session = await auth();
-
-  return Response.json({ data: session?.user?.id });
-}
-
 // POST http://localhost:3000/api/reviews
 export async function POST(request: Request) {
   try {

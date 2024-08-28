@@ -16,7 +16,8 @@ export const registerUser = (
 };
 
 export const insertUser = async (data: Partial<typeof Users.$inferInsert>) => {
-  return db.insert(Users).values(data).returning();
+  const [user] = await db.insert(Users).values(data).returning();
+  return user;
 };
 
 export const getUser = async (email: string, plainPassword: string) => {
