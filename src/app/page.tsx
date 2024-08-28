@@ -35,12 +35,14 @@ export default async function Home() {
             <CardDescription>{book.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="my-2">
+            <div className="my-2 flex">
               <Ratings rating={book.rating ?? 0} />
+              <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
+              <div className="ml-2">{book.reviewCount} reviews</div>
             </div>
             <div className="my-4">
               <Button asChild>
-                <Link href={`/books/${book.id}`}>Give a review</Link>
+                <Link href={`/books/${book.id}`}>See book reviews</Link>
               </Button>
             </div>
           </CardContent>

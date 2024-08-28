@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardDescription,
   CardContent,
   CardFooter,
   CardHeader,
@@ -20,8 +21,9 @@ import { Label } from "~/components/ui/label";
 
 import { getBook, insertBook } from "~/services/book-service";
 import { Ratings } from "~/components/ui/rating";
-import { insertReview } from "~/services/review-service";
+import { getListByBookId, insertReview } from "~/services/review-service";
 import { auth } from "~/lib/auth";
+import { Review } from "~/components/ui/review";
 
 export default async function BookReview({
   params,
@@ -35,10 +37,21 @@ export default async function BookReview({
   }
 
   const book = await getBook(params.id);
+
+  if (!book) {
+    return <div>Book not found!</div>;
+  }
+
+  const reviews = await getListByBookId(book.id);
+
   const handleSubmit = async (formData: FormData) => {
     "use server";
     const rating = formData.get("rating") as string;
     const review = formData.get("review") as string;
+
+    if (!review.length) {
+      return alert("Review cannot be empty!");
+    }
 
     await insertReview({
       rating: parseInt(rating),
@@ -46,16 +59,26 @@ export default async function BookReview({
       bookId: book?.id,
       userId: session?.user?.id,
     });
-
-    redirect("/?message=Review added!");
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Card className="w-[350px]">
+    <main className="flex min-h-screen flex-col p-24">
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>{book?.name}</CardTitle>
+          <CardDescription>{book.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {reviews.map((review) => (
+            <Review key={review.id} review={review} />
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card className="min-w-[350px]">
         <form action={handleSubmit}>
           <CardHeader>
-            <CardTitle>Add review: {book?.name}</CardTitle>
+            <CardTitle>Add review</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid w-full items-center gap-4">
@@ -91,8 +114,8 @@ export default async function BookReview({
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button asChild variant="outline">
-              <Link href="/">Cancel</Link>
+            <Button type="reset" variant="outline">
+              Cancel
             </Button>
             <Button type="submit">Create</Button>
           </CardFooter>

@@ -10,6 +10,9 @@ export const insertReview = async (
 export const getListByBookId = async (bookId: string) => {
   return db.query.reviews.findMany({
     where: eq(Reviews.bookId, bookId),
+    with: {
+      user: true,
+    },
   });
 };
 
