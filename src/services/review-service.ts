@@ -1,21 +1,33 @@
 import { eq } from "drizzle-orm";
-import { db, reviews as Reviews } from "~/lib/db";
+import { DB, db, reviews as Reviews } from "~/lib/db";
 
-export const insertReview = async (
-  data: Partial<typeof Reviews.$inferInsert>
-) => {
-  return db.insert(Reviews).values(data).returning();
-};
+let _instance: ReviewService;
+export class ReviewService {
+  constructor(private database: DB) {}
+  static getInstance(database: DB = db) {
+    if (!_instance) {
+      _instance = new ReviewService(database);
+    }
 
-export const getListByBookId = async (bookId: string) => {
-  return db.query.reviews.findMany({
-    where: eq(Reviews.bookId, bookId),
-    with: {
-      user: true,
-    },
-  });
-};
+    return _instance;
+  }
 
-export const deleteReview = async (id: string) => {
-  return db.delete(Reviews).where(eq(Reviews.id, id)).returning();
-};
+  async insertReview(data: Partial<typeof Reviews.$inferInsert>) {
+    return this.database.insert(Reviews).values(data).returning();
+  }
+
+  async getListByBookId(bookId: string) {
+    return this.database.query.reviews.findMany({
+      where: eq(Reviews.bookId, bookId),
+      with: {
+        user: true,
+      },
+    });
+  }
+
+  async deleteReview(id: string) {
+    return this.database.delete(Reviews).where(eq(Reviews.id, id)).returning();
+  }
+}
+
+export default ReviewService;

@@ -1,6 +1,6 @@
 import { auth } from "~/lib/auth";
 import { insertReviewSchema } from "~/lib/db";
-import { insertReview } from "~/services/review-service";
+import { ReviewService } from "~/services/review-service";
 
 const requestSchema = insertReviewSchema.pick({
   bookId: true,
@@ -14,9 +14,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const session = await auth();
 
+    const reviewService = ReviewService.getInstance();
+
     const data = requestSchema.parse(body);
 
-    const review = await insertReview({
+    const review = await reviewService.insertReview({
       ...data,
       userId: session?.user?.id,
     });

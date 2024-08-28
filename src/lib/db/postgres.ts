@@ -7,8 +7,8 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set");
 }
 
-export default () => {
-  const client = postgres(process.env.DATABASE_URL);
+const createDatabaseConnection = () => {
+  const client = postgres(process.env.DATABASE_URL!);
   const db = drizzle(client, {
     logger: true,
     schema,
@@ -19,3 +19,5 @@ export default () => {
     db,
   };
 };
+
+export default createDatabaseConnection;

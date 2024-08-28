@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { getUser } from "~/services/user-service";
+import { UserService } from "~/services/user-service";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -19,7 +19,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("password is missing!");
         }
 
-        user = await getUser(
+        const service = UserService.getInstance();
+
+        user = await service.getUser(
           credentials.email as string,
           credentials.password as string
         );
@@ -29,8 +31,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // meaning this is also the place you could do registration
           throw new Error("User not found.");
         }
-
-        console.log("USER=>", user);
 
         // return user object with their profile data
         return user;

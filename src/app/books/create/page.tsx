@@ -28,7 +28,7 @@ export default async function BooksCreate() {
     const isbn = formData.get("isbn") as string;
     const description = formData.get("description") as string;
 
-    const service = BookService.create();
+    const service = BookService.getInstance();
 
     await service.createBook({ name, isbn, description });
 

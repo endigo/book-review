@@ -1,4 +1,4 @@
-import { getBook, deleteBook, updateBook } from "~/services/book-service";
+import { BookService } from "~/services/book-service";
 import { insertBookSchema } from "~/lib/db";
 
 const requestSchema = insertBookSchema.pick({
@@ -9,7 +9,8 @@ const requestSchema = insertBookSchema.pick({
 
 // GET http://localhost:3000/api/books/[id]
 export async function GET(_: Request, { params }: { params: { id: string } }) {
-  const book = await getBook(params.id);
+  const service = BookService.getInstance();
+  const book = await service.getBook(params.id);
 
   return Response.json({ data: book });
 }
@@ -19,7 +20,8 @@ export async function DELETE(
   _: Request,
   { params }: { params: { id: string } }
 ) {
-  const [book] = await deleteBook(params.id);
+  const service = BookService.getInstance();
+  const [book] = await service.deleteBook(params.id);
 
   return Response.json({ data: book, deleted: true });
 }
@@ -32,8 +34,8 @@ export async function PUT(
   const body = await request.json();
 
   const data = requestSchema.parse(body);
-
-  const [book] = await updateBook(params.id, data);
+  const service = BookService.getInstance();
+  const [book] = await service.updateBook(params.id, data);
 
   return Response.json({ data: book });
 }

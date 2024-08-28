@@ -8,10 +8,11 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Ratings } from "~/components/ui/rating";
-import { getList } from "~/services/book-service";
+import { BookService } from "~/services/book-service";
 
 export default async function Home() {
-  const data = await getList();
+  const service = BookService.getInstance();
+  const data = await service.getBooks();
 
   return (
     <main className="flex min-h-screen flex-col p-24">

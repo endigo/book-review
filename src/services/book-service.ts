@@ -1,16 +1,16 @@
 import { eq, sql } from "drizzle-orm";
 import { DB, db, books as Books, reviews } from "~/lib/db";
 
-export let bookServiceInstance: BookService;
+let _bookServiceInstance: BookService;
 export class BookService {
   constructor(private database: DB) {}
 
-  static create(database: DB = db) {
-    if (!bookServiceInstance) {
-      bookServiceInstance = new BookService(database);
+  static getInstance(database: DB = db) {
+    if (!_bookServiceInstance) {
+      _bookServiceInstance = new BookService(database);
     }
 
-    return bookServiceInstance;
+    return _bookServiceInstance;
   }
   async getBook(id: string) {
     const books = await this.database

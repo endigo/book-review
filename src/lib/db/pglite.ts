@@ -2,17 +2,17 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import * as schema from "./schema";
 
-let client: PGlite;
+let _client: PGlite;
 const createDatabase = () => {
-  if (!client) {
-    client = new PGlite();
+  if (!_client) {
+    _client = new PGlite();
   }
 
-  const db = drizzle(client, {
+  const db = drizzle(_client, {
     schema,
   });
 
-  return { db, client };
+  return { db, client: _client };
 };
 
 export default createDatabase;

@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { getBook } from "~/services/book-service";
-import { getListByBookId } from "~/services/review-service";
+import { BookService } from "~/services/book-service";
+import { ReviewService } from "~/services/review-service";
 import { auth } from "~/lib/auth";
 import { Review } from "~/components/ui/review";
 import { ReviewForm } from "~/components/ui/review-form";
@@ -24,13 +24,16 @@ export default async function BookReview({
     redirect("/login");
   }
 
-  const book = await getBook(params.id);
+  const bookService = BookService.getInstance();
+
+  const book = await bookService.getBook(params.id);
 
   if (!book) {
     return <div>Book not found!</div>;
   }
+  const reviewService = ReviewService.getInstance();
 
-  const reviews = await getListByBookId(book.id);
+  const reviews = await reviewService.getListByBookId(book.id);
 
   return (
     <main className="flex min-h-screen flex-col p-24">

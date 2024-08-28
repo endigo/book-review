@@ -7,7 +7,7 @@ describe("BooksService", () => {
   let service: BookService;
   beforeAll(async () => {
     const { db } = getPgLiteClient();
-    service = BookService.create(db);
+    service = BookService.getInstance(db);
   });
 
   it("creates a book", async () => {
