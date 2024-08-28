@@ -1,14 +1,20 @@
 import { expect, it, describe, beforeAll } from "vitest";
 import { faker } from "@faker-js/faker";
 import { books, users } from "../src/lib/db/schema";
-import { insertBook } from "../src/services/book-service";
+import { BookService } from "../src/services/book-service";
 import { registerUser } from "../src/services/user-service";
 import { insertReview } from "../src/services/review-service";
+import getPgLiteClient from "../src/lib/db/pglite";
 
 describe("ReviewService", () => {
   let user: Partial<typeof users.$inferInsert>;
   let book: typeof books.$inferInsert;
+
+  let service: BookService;
   beforeAll(async () => {
+    const { db } = getPgLiteClient();
+    service = BookService.create(db);
+
     user = await registerUser({
       email: faker.internet.email(),
       password: faker.string.alpha(8),
@@ -20,10 +26,11 @@ describe("ReviewService", () => {
       description: faker.string.sample(),
     };
 
-    const books = await insertBook(data);
+    const books = await service.createBook(data);
 
     book = books[0];
   });
+
   it("store review successfully", async () => {
     const data = {
       rating: faker.number.int({ max: 5, min: 1 }),
@@ -38,6 +45,7 @@ describe("ReviewService", () => {
     expect(reviews[0].reviewText).toBe(data.reviewText);
     expect(reviews[0].rating).toBe(data.rating);
   });
+
   it("throws error when user already left review", async () => {
     const data = {
       rating: faker.number.int({ max: 5, min: 1 }),

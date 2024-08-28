@@ -12,7 +12,7 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 
-import { insertBook } from "~/services/book-service";
+import { BookService } from "~/services/book-service";
 import { auth } from "~/lib/auth";
 
 export default async function BooksCreate() {
@@ -28,7 +28,9 @@ export default async function BooksCreate() {
     const isbn = formData.get("isbn") as string;
     const description = formData.get("description") as string;
 
-    await insertBook({ name, isbn, description });
+    const service = BookService.create();
+
+    await service.createBook({ name, isbn, description });
 
     redirect("/?message=Book added!");
   };
